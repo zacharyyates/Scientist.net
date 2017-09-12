@@ -69,6 +69,21 @@ namespace GitHub
         /// Conduct a synchronous experiment
         /// </summary>
         /// <typeparam name="T">The return type of the experiment</typeparam>
+        /// <param name="name">Name of the experiment</param>
+        /// <param name="concurrentTasks">Number of tasks to run concurrently</param>
+        /// <param name="experiment">Experiment callback used to configure the experiment</param>
+        /// <returns>The value of the experiment's control function.</returns>
+        public static T Science<T>(string name, int concurrentTasks, Action<IExperiment<T>> experiment)
+        {
+            var builder = Build<T, T>(name, concurrentTasks, experiment);
+            builder.Clean(value => value);
+            return builder.Build().Run().Result;
+        }
+
+        /// <summary>
+        /// Conduct a synchronous experiment
+        /// </summary>
+        /// <typeparam name="T">The return type of the experiment</typeparam>
         /// <typeparam name="TClean">The clean type for publishing.</typeparam>
         /// <param name="name">Name of the experiment</param>
         /// <param name="experiment">Experiment callback used to configure the experiment</param>
